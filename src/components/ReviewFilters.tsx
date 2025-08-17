@@ -12,11 +12,23 @@ interface ReviewFiltersProps {
 }
 
 export default function ReviewFilters({ filters, onFiltersChange, onClearFilters, totalReviews, filteredCount, propertyId }: ReviewFiltersProps) {
-  const handleFilterChange = (key: keyof FilterOptions, value: any) => {
-    onFiltersChange({
-      ...filters,
-      [key]: value
-    });
+  const handleFilterChange = (filterType: keyof FilterOptions, value: string | number | boolean | undefined) => {
+    if (value !== undefined) {
+      onFiltersChange({ [filterType]: value });
+    } else {
+      // Remove the filter if value is undefined
+      const newFilters = { ...filters };
+      delete newFilters[filterType];
+      onFiltersChange(newFilters);
+    }
+  };
+
+  const handleDateRangeChange = (field: 'start' | 'end', value: string) => {
+    const newDateRange = {
+      ...filters.dateRange,
+      [field]: value || undefined
+    };
+    onFiltersChange({ dateRange: newDateRange });
   };
 
   return (
@@ -164,10 +176,7 @@ export default function ReviewFilters({ filters, onFiltersChange, onClearFilters
               type="date"
               id="startDate"
               value={filters.dateRange?.start || ''}
-              onChange={(e) => handleFilterChange('dateRange', {
-                ...filters.dateRange,
-                start: e.target.value || undefined
-              })}
+              onChange={(e) => handleDateRangeChange('start', e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -179,10 +188,7 @@ export default function ReviewFilters({ filters, onFiltersChange, onClearFilters
               type="date"
               id="endDate"
               value={filters.dateRange?.end || ''}
-              onChange={(e) => handleFilterChange('dateRange', {
-                ...filters.dateRange,
-                end: e.target.value || undefined
-              })}
+              onChange={(e) => handleDateRangeChange('end', e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>

@@ -50,8 +50,6 @@ export const useReviews = (initialReviews: Review[] = []) => {
       });
       
       if (response.ok) {
-        const responseData = await response.json();
-        
         // Update local state immediately
         setReviews(prev => {
           const updatedReviews = ReviewService.updateReviewStatus(prev, reviewId, action);
@@ -60,7 +58,7 @@ export const useReviews = (initialReviews: Review[] = []) => {
         
         // Force a re-render by updating filtered reviews
         setTimeout(() => {
-          setFilteredReviews(prev => {
+          setFilteredReviews(() => {
             const filtered = ReviewService.filterReviews(reviews, filters);
             return filtered;
           });
@@ -79,7 +77,7 @@ export const useReviews = (initialReviews: Review[] = []) => {
     } finally {
       setLoading(false);
     }
-  }, [addToast]);
+  }, [addToast, reviews, filters]);
 
   // Set reviews
   const setReviewsData = useCallback((newReviews: Review[]) => {

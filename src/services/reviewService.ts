@@ -3,15 +3,14 @@ import { mockReviews } from '@/data/mockReviews';
 
 export class ReviewService {
   /**
-   * Normalize and enhance review data
+   * Normalize review data to ensure consistent structure
    */
   static normalizeReviews(reviews: Review[]): Review[] {
     return reviews.map(review => ({
       ...review,
       channel: review.channel || 'hostaway',
-      isApproved: review.isApproved ?? (review.rating && review.rating >= 7),
-      isPublic: review.isPublic ?? (review.rating && review.rating >= 8),
-      rating: review.rating || this.calculateRatingFromCategories(review.reviewCategory)
+      isApproved: Boolean(review.isApproved ?? (review.rating && review.rating >= 7)),
+      isPublic: Boolean(review.isPublic ?? (review.rating && review.rating >= 7))
     }));
   }
 

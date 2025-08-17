@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Property Management Dashboard | Flex Living',
@@ -12,7 +13,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="dashboard-layout">
-      {children}
+      <Suspense fallback={<div>Loading dashboard...</div>}>
+        {children}
+      </Suspense>
     </div>
   );
 } 

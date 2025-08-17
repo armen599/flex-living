@@ -73,7 +73,7 @@ export class GoogleReviewsService {
   private static transformGoogleReviews(googleReviews: GoogleReview[], propertyName: string): Review[] {
     return googleReviews.map((googleReview) => {
       // Create a unique ID for Google reviews using the utility
-      const id = generateUniqueId('google');
+      const id = generateUniqueId();
       
       // Convert Google rating (1-5) to our scale (1-10)
       const rating = googleReview.rating * 2;
@@ -109,78 +109,95 @@ export class GoogleReviewsService {
    * Mock Google Reviews for development (when API key is not available)
    */
   static getMockGoogleReviews(propertyName: string): Review[] {
-    const mockReviews: Omit<GoogleReview, 'time'>[] = [
+    // Generate mock Google reviews based on the property name
+    const mockReviews = [
       {
-        author_name: 'Sarah Johnson',
-        author_url: 'https://maps.google.com/...',
-        language: 'en',
-        profile_photo_url: 'https://lh3.googleusercontent.com/...',
-        rating: 5,
-        relative_time_description: '2 months ago',
-        text: 'Excellent property management! The apartment was spotless and the location is perfect for exploring London. Highly recommend!',
-        translated: false
+        id: generateUniqueId(),
+        type: 'guest-to-host' as const,
+        status: 'published' as const,
+        rating: 9,
+        publicReview: `Excellent stay at ${propertyName}! The property was immaculate and the location was perfect. Highly recommend for anyone visiting the area.`,
+        reviewCategory: [
+          { category: 'cleanliness', rating: 9 },
+          { category: 'communication', rating: 9 },
+          { category: 'check_in', rating: 9 },
+          { category: 'accuracy', rating: 9 },
+          { category: 'location', rating: 9 },
+          { category: 'value', rating: 9 }
+        ],
+        submittedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        guestName: 'Sarah Johnson',
+        listingName: propertyName,
+        channel: 'google' as const,
+        isApproved: true,
+        isPublic: true
       },
       {
-        author_name: 'Michael Chen',
-        author_url: 'https://maps.google.com/...',
-        language: 'en',
-        profile_photo_url: 'https://lh3.googleusercontent.com/...',
-        rating: 4,
-        relative_time_description: '3 months ago',
-        text: 'Great place to stay. Clean, comfortable, and well-located. The staff was very helpful and responsive.',
-        translated: false
+        id: generateUniqueId(),
+        type: 'guest-to-host' as const,
+        status: 'published' as const,
+        rating: 8,
+        publicReview: `Great experience at ${propertyName}. The property was well-maintained and the amenities were as described. Would stay again!`,
+        reviewCategory: [
+          { category: 'cleanliness', rating: 8 },
+          { category: 'communication', rating: 8 },
+          { category: 'check_in', rating: 8 },
+          { category: 'accuracy', rating: 8 },
+          { category: 'location', rating: 8 },
+          { category: 'value', rating: 8 }
+        ],
+        submittedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        guestName: 'Michael Chen',
+        listingName: propertyName,
+        channel: 'google' as const,
+        isApproved: true,
+        isPublic: true
       },
       {
-        author_name: 'Emma Thompson',
-        author_url: 'https://maps.google.com/...',
-        language: 'en',
-        profile_photo_url: 'https://lh3.googleusercontent.com/...',
-        rating: 5,
-        relative_time_description: '4 months ago',
-        text: 'Absolutely loved our stay here! The apartment exceeded our expectations. Perfect location and amazing service.',
-        translated: false
+        id: generateUniqueId(),
+        type: 'guest-to-host' as const,
+        status: 'published' as const,
+        rating: 10,
+        publicReview: `Absolutely perfect stay at ${propertyName}! Everything exceeded our expectations. The property manager was incredibly responsive and helpful.`,
+        reviewCategory: [
+          { category: 'cleanliness', rating: 10 },
+          { category: 'communication', rating: 10 },
+          { category: 'check_in', rating: 10 },
+          { category: 'accuracy', rating: 10 },
+          { category: 'location', rating: 10 },
+          { category: 'value', rating: 10 }
+        ],
+        submittedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        guestName: 'Emma Rodriguez',
+        listingName: propertyName,
+        channel: 'google' as const,
+        isApproved: true,
+        isPublic: true
       },
       {
-        author_name: 'David Wilson',
-        author_url: 'https://maps.google.com/...',
-        language: 'en',
-        profile_photo_url: 'https://lh3.googleusercontent.com/...',
-        rating: 3,
-        relative_time_description: '5 months ago',
-        text: 'Decent place but could use some updates. Location is good but the apartment needs some maintenance.',
-        translated: false
+        id: generateUniqueId(),
+        type: 'guest-to-host' as const,
+        status: 'published' as const,
+        rating: 7,
+        publicReview: `Good stay at ${propertyName}. The property was clean and comfortable. Some minor issues but overall a positive experience.`,
+        reviewCategory: [
+          { category: 'cleanliness', rating: 7 },
+          { category: 'communication', rating: 7 },
+          { category: 'check_in', rating: 7 },
+          { category: 'accuracy', rating: 7 },
+          { category: 'location', rating: 7 },
+          { category: 'value', rating: 7 }
+        ],
+        submittedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        guestName: 'David Thompson',
+        listingName: propertyName,
+        channel: 'google' as const,
+        isApproved: true,
+        isPublic: true
       }
     ];
 
-    return mockReviews.map((review) => {
-      const id = generateUniqueId('google');
-      const rating = review.rating * 2;
-      const categories: ReviewCategory[] = [
-        { category: 'overall_experience', rating },
-        { category: 'service_quality', rating: Math.max(1, rating - 1) },
-        { category: 'value_for_money', rating: Math.max(1, rating - 1) }
-      ];
-
-      // Generate a date within the last 6 months
-      const date = new Date();
-      date.setMonth(date.getMonth() - (5 - review.rating));
-      const dateString = date.toISOString().replace('T', ' ').substring(0, 19);
-
-      return {
-        id,
-        type: 'guest-to-host',
-        status: 'published',
-        rating,
-        publicReview: review.text,
-        reviewCategory: categories,
-        submittedAt: dateString,
-        guestName: review.author_name,
-        listingName: propertyName,
-        channel: 'google',
-        isApproved: true,
-        isPublic: true
-      };
-    });
+    return mockReviews;
   }
 
   /**
@@ -201,7 +218,7 @@ export class GoogleReviewsService {
         reviews = reviews.map(review => {
           let newId = review.id;
           while (existingReviewIds.has(newId)) {
-            newId = generateUniqueId('google');
+            newId = generateUniqueId();
           }
           existingReviewIds.add(newId);
           return { ...review, id: newId };
@@ -218,7 +235,7 @@ export class GoogleReviewsService {
         return mockReviews.map(review => {
           let newId = review.id;
           while (existingReviewIds.has(newId)) {
-            newId = generateUniqueId('google');
+            newId = generateUniqueId();
           }
           existingReviewIds.add(newId);
           return { ...review, id: newId };

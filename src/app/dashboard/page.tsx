@@ -13,7 +13,7 @@ import { ToastContainer } from '@/components/ui/Toast';
 import { useProperties } from '@/hooks/useProperties';
 import { useReviews } from '@/hooks/useReviews';
 import { Review } from '@/types/reviews';
-import { ensureUniqueIds, generateUniqueId } from '@/utils/idUtils';
+import { generateUniqueId } from '@/utils/idUtils';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -22,7 +22,6 @@ export default function Dashboard() {
   const {
     properties,
     selectedProperty,
-    allPropertiesStats,
     loading: propertiesLoading,
     changeProperty,
     getSelectedPropertyReviews
@@ -38,7 +37,6 @@ export default function Dashboard() {
     clearFilters,
     updateReviewStatus,
     setReviewsData,
-    addToast,
     removeToast
   } = useReviews();
 
@@ -71,7 +69,7 @@ export default function Dashboard() {
         // Generate a new unique ID if needed
         let newId = review.id;
         while (existingReviewIds.has(newId)) {
-          newId = generateUniqueId('google');
+          newId = generateUniqueId();
         }
         existingReviewIds.add(newId);
         return { ...review, id: newId };

@@ -1,4 +1,4 @@
-import { Review, Property, ReviewStats } from '@/types/reviews';
+import { Review, Property } from '@/types/reviews';
 
 export const mockReviews: Review[] = [
   {
